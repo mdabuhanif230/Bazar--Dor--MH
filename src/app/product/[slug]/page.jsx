@@ -1,7 +1,9 @@
 import { notFound } from "next/navigation";
 
 import { getProductBySlug } from "@/lib/api";
+
 import { requireSession } from "@/lib/session";
+
 import ProductDetails from "@/components/products/ProductDetails";
 
 export const dynamic = "force-dynamic";
