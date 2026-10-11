@@ -132,6 +132,4 @@ Diploma in Computer Science and Technology
 Sirajganj Polytechnic Institute  
 Programming Hero — Batch 14
 
-## Price Notice
 
-Displayed prices are estimates and may change depending on market conditions.
