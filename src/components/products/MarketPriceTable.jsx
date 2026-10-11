@@ -5,24 +5,43 @@ import {
 } from "@/utils/formatPrice";
 
 export default function MarketPriceTable({ markets }) {
+    const cellStyle =
+        "border-b border-[#e4ece6] px-3 py-[11px] whitespace-nowrap";
+
     return (
-        <div className="market-section">
-            <h2>বাজারভিত্তিক আজকের দাম</h2>
+        <div>
+            <h2 className="mb-[14px] text-[17px] font-semibold">
+                বাজারভিত্তিক আজকের দাম
+            </h2>
 
             {markets.length ? (
-                <div className="table-scroll">
-                    <table className="table market-table">
+                <div className="overflow-x-auto">
+                    <table className="w-full border-collapse text-left text-xs">
                         <caption className="sr-only">
                             বিভিন্ন বাজারে সর্বনিম্ন, সর্বোচ্চ ও গড় দাম
                         </caption>
 
-                        <thead>
+                        <thead className="text-[11px] text-[#78877e]">
                             <tr>
-                                <th>বাজার</th>
-                                <th>বিভাগ</th>
-                                <th>সর্বনিম্ন</th>
-                                <th>সর্বোচ্চ</th>
-                                <th>গড়</th>
+                                <th className={`${cellStyle} font-medium`}>
+                                    বাজার
+                                </th>
+
+                                <th className={`${cellStyle} font-medium`}>
+                                    বিভাগ
+                                </th>
+
+                                <th className={`${cellStyle} font-medium`}>
+                                    সর্বনিম্ন
+                                </th>
+
+                                <th className={`${cellStyle} font-medium`}>
+                                    সর্বোচ্চ
+                                </th>
+
+                                <th className={`${cellStyle} text-right font-medium`}>
+                                    গড়
+                                </th>
                             </tr>
                         </thead>
 
@@ -35,13 +54,27 @@ export default function MarketPriceTable({ markets }) {
                                     (minimumPrice + maximumPrice) / 2;
 
                                 return (
-                                    <tr key={`${market.market}-${index}`}>
-                                        <td>{market.market}</td>
-                                        <td>{market.division}</td>
-                                        <td>{formatPrice(market.min)}</td>
-                                        <td>{formatPrice(market.max)}</td>
+                                    <tr
+                                        key={`${market.market}-${index}`}
+                                        className="even:bg-[#eff5f0]"
+                                    >
+                                        <td className={`${cellStyle} font-medium`}>
+                                            {market.market}
+                                        </td>
 
-                                        <td>
+                                        <td className={cellStyle}>
+                                            {market.division}
+                                        </td>
+
+                                        <td className={cellStyle}>
+                                            {formatPrice(market.min)}
+                                        </td>
+
+                                        <td className={cellStyle}>
+                                            {formatPrice(market.max)}
+                                        </td>
+
+                                        <td className={`${cellStyle} text-right`}>
                                             {formatNumber(averagePrice, 1)} টাকা
                                         </td>
                                     </tr>
@@ -51,7 +84,7 @@ export default function MarketPriceTable({ markets }) {
                     </table>
                 </div>
             ) : (
-                <p className="muted">
+                <p className="text-[#78877d]">
                     এই পণ্যের বাজারভিত্তিক দাম পাওয়া যায়নি।
                 </p>
             )}

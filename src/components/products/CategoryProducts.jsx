@@ -14,8 +14,8 @@ export default function CategoryProducts({ products }) {
 
     return (
         <>
-            <div className="panel sort-toolbar">
-                <span>
+            <div className="mb-[18px] flex items-center justify-between gap-4 rounded-xl border border-[#e7eee9] bg-[#ffffffba] px-[18px] py-3 max-[540px]:flex-col max-[540px]:items-start max-[540px]:gap-2.5 max-[540px]:px-[15px]">
+                <span className="text-xs text-[#78877d]">
                     {productCount}টি পণ্য পাওয়া গেছে
                 </span>
 
@@ -25,7 +25,7 @@ export default function CategoryProducts({ products }) {
                 />
             </div>
 
-            <div className="product-grid">
+            <div className="grid grid-cols-3 gap-4 max-[900px]:gap-3 max-[767px]:grid-cols-2 max-[540px]:grid-cols-1">
                 {sortedProducts.map(function (product) {
                     return (
                         <ProductCard

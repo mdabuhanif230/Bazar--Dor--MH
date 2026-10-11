@@ -9,13 +9,13 @@ import {
 import toast from "react-hot-toast";
 
 export default function AuthFeedback() {
-  const params = useSearchParams();
+  const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
 
-  const reason = params.get("reason");
-  const status = params.get("auth");
-  const error = params.get("error");
+  const reason = searchParams.get("reason");
+  const authStatus = searchParams.get("auth");
+  const authError = searchParams.get("error");
 
   useEffect(() => {
     if (reason === "protected") {
@@ -25,40 +25,39 @@ export default function AuthFeedback() {
       );
     }
 
-    if (status === "success") {
+    if (authStatus === "success") {
       toast.success(
         "সফলভাবে সাইন ইন হয়েছে।",
         { id: "social-auth" }
       );
     }
 
-    if (error) {
+    if (authError) {
       toast.error(
         "সোশ্যাল সাইন ইন ব্যর্থ হয়েছে। আবার চেষ্টা করুন।",
         { id: "social-error" }
       );
     }
 
-    if (reason || status || error) {
-      const cleanParams = new URLSearchParams(
-        params.toString()
-      );
-
-      cleanParams.delete("reason");
-      cleanParams.delete("auth");
-      cleanParams.delete("error");
-
-      let cleanPath = pathname;
-
-      if (cleanParams.size) {
-        cleanPath = `${pathname}?${cleanParams.toString()}`;
-      }
-
-      router.replace(cleanPath, {
-        scroll: false,
-      });
+    if (!reason && !authStatus && !authError) {
+      return;
     }
-  }, [reason, status, error, params, pathname, router]);
+
+    const newParams = new URLSearchParams(searchParams.toString());
+
+    newParams.delete("reason");
+    newParams.delete("auth");
+    newParams.delete("error");
+
+    const queryString = newParams.toString();
+    let newUrl = pathname;
+
+    if (queryString) {
+      newUrl = pathname + "?" + queryString;
+    }
+
+    router.replace(newUrl, { scroll: false });
+  }, [reason, authStatus, authError, searchParams, pathname, router]);
 
   return null;
 }

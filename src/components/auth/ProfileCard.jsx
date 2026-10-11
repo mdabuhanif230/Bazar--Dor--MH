@@ -50,14 +50,16 @@ export default function ProfileCard({ initialUser }) {
     }
 
     return (
-        <section className="profile-page">
-            <h1>আমার প্রোফাইল</h1>
+        <section className="mx-auto mt-[25px] mb-[60px] max-w-[680px]">
+            <h1 className="text-[25px] font-semibold">
+                আমার প্রোফাইল
+            </h1>
 
-            <p className="muted">
+            <p className="mb-5 text-xs text-[#78877d]">
                 আপনার অ্যাকাউন্টের তথ্য এখানে দেখুন।
             </p>
 
-            <div className="panel mt-6 flex flex-col gap-5 p-6 sm:flex-row sm:items-center">
+            <div className="mt-6 flex flex-col gap-5 rounded-xl border border-[#e7eee9] bg-[#ffffffba] p-6 sm:flex-row sm:items-center">
                 <div className="flex min-w-0 items-center gap-4">
                     <ProfilePhoto
                         key={`${user.id}-${user.image || ""}`}
@@ -69,7 +71,7 @@ export default function ProfileCard({ initialUser }) {
                             {user.name}
                         </h2>
 
-                        <p className="muted break-all">
+                        <p className="break-all text-[#78877d]">
                             {user.email}
                         </p>
                     </div>
@@ -77,7 +79,7 @@ export default function ProfileCard({ initialUser }) {
 
                 <Link
                     href="/profile/update"
-                    className="btn btn-primary btn-sm sm:ml-auto"
+                    className="inline-flex min-h-8 shrink-0 items-center justify-center rounded-md border border-[#008d3d] bg-[#008d3d] px-3 text-sm font-medium text-white hover:border-[#007833] hover:bg-[#007833] sm:ml-auto"
                 >
                     তথ্য আপডেট করুন
                 </Link>

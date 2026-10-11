@@ -5,17 +5,11 @@ export function sortProducts(products, order = "default") {
 
   if (order === "low") {
     result.sort(function (a, b) {
-      const firstPrice = toNumber(a.today);
-      const secondPrice = toNumber(b.today);
-
-      return firstPrice - secondPrice;
+      return toNumber(a.today) - toNumber(b.today);
     });
   } else if (order === "high") {
     result.sort(function (a, b) {
-      const firstPrice = toNumber(a.today);
-      const secondPrice = toNumber(b.today);
-
-      return secondPrice - firstPrice;
+      return toNumber(b.today) - toNumber(a.today);
     });
   }
 
@@ -23,22 +17,20 @@ export function sortProducts(products, order = "default") {
 }
 
 export function topMovers(products, dir) {
-  const selectedProducts = [];
+  const result = [];
 
   for (const product of products) {
-    const change = changeInfo(product);
-
-    if (change.dir === dir) {
-      selectedProducts.push(product);
+    if (changeInfo(product).dir === dir) {
+      result.push(product);
     }
   }
 
-  selectedProducts.sort(function (a, b) {
-    const firstChange = Math.abs(changeInfo(a).amount);
-    const secondChange = Math.abs(changeInfo(b).amount);
+  result.sort(function (a, b) {
+    const first = Math.abs(changeInfo(a).amount);
+    const second = Math.abs(changeInfo(b).amount);
 
-    return secondChange - firstChange;
+    return second - first;
   });
 
-  return selectedProducts.slice(0, 6);
+  return result.slice(0, 6);
 }

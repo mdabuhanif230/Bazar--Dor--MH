@@ -2,71 +2,51 @@ import "server-only";
 
 import { betterAuth } from "better-auth";
 import { mongodbAdapter } from "@better-auth/mongo-adapter";
-
 import { getMongoClient } from "./mongodb";
 
-let instance;
+let auth;
 
 export function getAuth() {
-  if (instance) {
-    return instance;
+  if (auth) {
+    return auth;
   }
 
   const secret = process.env.BETTER_AUTH_SECRET;
-  const baseURL = process.env.BETTER_AUTH_URL;
+  const url = process.env.BETTER_AUTH_URL;
 
-  if (
-    !secret ||
-    secret.length < 32 ||
-    secret.startsWith("REPLACE_")
-  ) {
-    throw new Error(
-      "Set a random BETTER_AUTH_SECRET of at least 32 characters."
-    );
+  if (!secret || secret.length < 32 || secret.startsWith("REPLACE_")) {
+    throw new Error("BETTER_AUTH_SECRET সঠিকভাবে দিন।");
   }
 
-  if (!baseURL) {
-    throw new Error(
-      "BETTER_AUTH_URL environment variable is missing."
-    );
+  if (!url) {
+    throw new Error("BETTER_AUTH_URL দিন।");
   }
 
   const client = getMongoClient();
+  const providers = {};
 
-  const databaseName = process.env.MONGODB_DB || "bazar_dor";
-
-  const socialProviders = {};
-
-  if (
-    process.env.GOOGLE_CLIENT_ID &&
-    process.env.GOOGLE_CLIENT_SECRET
-  ) {
-    socialProviders.google = {
+  if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+    providers.google = {
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     };
   }
 
-  if (
-    process.env.GITHUB_CLIENT_ID &&
-    process.env.GITHUB_CLIENT_SECRET
-  ) {
-    socialProviders.github = {
+  if (process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET) {
+    providers.github = {
       clientId: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
     };
   }
 
-  instance = betterAuth({
+  auth = betterAuth({
     appName: "BazarDor",
-
-    baseURL,
-    secret,
-
-    trustedOrigins: [baseURL],
+    baseURL: url,
+    secret: secret,
+    trustedOrigins: [url],
 
     database: mongodbAdapter(
-      client.db(databaseName),
+      client.db(process.env.MONGODB_DB || "bazar_dor"),
       { client }
     ),
 
@@ -77,8 +57,8 @@ export function getAuth() {
       minPasswordLength: 8,
     },
 
-    socialProviders,
+    socialProviders: providers,
   });
 
-  return instance;
+  return auth;
 }

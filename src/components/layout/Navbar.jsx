@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
+import { Button } from "@heroui/react";
 import toast from "react-hot-toast";
 
 import { authClient } from "@/lib/auth-client";
@@ -48,12 +49,13 @@ export default function Navbar({
 }) {
     const path = usePathname();
     const router = useRouter();
-
     const { data: session, isPending } = authClient.useSession();
 
     const [busy, setBusy] = useState(false);
 
     async function logout() {
+        if (busy) return;
+
         setBusy(true);
 
         try {
@@ -66,7 +68,6 @@ export default function Navbar({
             }
 
             toast.success("সফলভাবে সাইন আউট হয়েছে।");
-
             router.push("/");
             router.refresh();
         } catch (error) {
@@ -88,44 +89,54 @@ export default function Navbar({
 
     if (isPending) {
         authContent = (
-            <div className="skeleton h-9 w-28 rounded-lg" />
+            <div
+                role="status"
+                aria-label="প্রোফাইল লোড হচ্ছে"
+                className="h-9 w-28 rounded-lg bg-[#dfe9e2] motion-safe:animate-pulse"
+            />
         );
     } else if (session?.user) {
         const user = session.user;
 
         authContent = (
-            <details className="user-menu">
-                <summary>
+            <details className="relative">
+                <summary className="flex list-none items-center gap-2 [&::marker]:content-[''] [&::-webkit-details-marker]:hidden">
                     <ProfileAvatar
                         key={`${user.id}-${user.image || ""}`}
                         user={user}
                     />
 
-                    <span className="user-name">
+                    <span className="max-w-[130px] truncate max-[540px]:max-w-20 max-[540px]:text-xs">
                         {user.name || user.email}
                     </span>
-
-                    
                 </summary>
 
-                <div className="user-dropdown">
-                    <strong>{user.name}</strong>
-                    <small>{user.email}</small>
+                <div className="absolute top-[42px] right-0 z-50 min-w-[225px] rounded-lg border border-[#e4ece6] bg-white p-4 shadow-[0_10px_25px_#1d302414]">
+                    <strong className="block wrap-anywhere">
+                        {user.name}
+                    </strong>
+
+                    <small className="mb-2 block text-[11px] text-[#78877d] wrap-anywhere">
+                        {user.email}
+                    </small>
 
                     <Link
                         href="/profile"
                         onClick={closeUserMenu}
+                        className="block w-full py-1.5 text-left text-[13px]"
                     >
                         আমার প্রোফাইল
                     </Link>
 
-                    <button
+                    <Button
                         type="button"
-                        onClick={logout}
-                        disabled={busy}
+                        variant="ghost"
+                        onPress={logout}
+                        isDisabled={busy}
+                        className="h-auto min-h-0 w-full justify-start rounded-none bg-transparent px-0 py-1.5 text-[13px] font-normal text-[#db504c] shadow-none"
                     >
                         {busy ? "অপেক্ষা করুন..." : "সাইন আউট"}
-                    </button>
+                    </Button>
                 </div>
             </details>
         );
@@ -134,14 +145,14 @@ export default function Navbar({
             <>
                 <Link
                     href="/signin"
-                    className="sign-in-link"
+                    className="text-[13px] font-semibold"
                 >
                     সাইন ইন
                 </Link>
 
                 <Link
                     href="/signup"
-                    className="btn btn-primary btn-sm"
+                    className="inline-flex h-8 items-center justify-center rounded-md border border-[#008d3d] bg-[#008d3d] px-3 text-sm font-medium text-white hover:border-[#007833] hover:bg-[#007833]"
                 >
                     সাইন আপ
                 </Link>
@@ -150,13 +161,13 @@ export default function Navbar({
     }
 
     return (
-        <header className="site-header">
-            <div className="site-container">
-                <div className="nav-top">
+        <header className="border-b border-[#e4ece6] bg-[#fcfefc]">
+            <div className="mx-auto w-[calc(100%-48px)] max-w-[1120px] max-[767px]:w-[calc(100%-32px)]">
+                <div className="flex min-h-[72px] items-center justify-between gap-4 max-[540px]:min-h-[66px]">
                     <Link
                         href="/"
-                        className="brand"
                         aria-label="বাজার দর হোম"
+                        className="flex items-center gap-2.5"
                     >
                         <Image
                             src="/images/logo-icon.png"
@@ -167,19 +178,24 @@ export default function Navbar({
                         />
 
                         <span>
-                            <strong>বাজার দর</strong>
-                            <small>{date}</small>
+                            <strong className="block text-[21px] leading-[1.1] max-[540px]:text-lg">
+                                বাজার দর
+                            </strong>
+
+                            <small className="mt-1 block text-[11px] text-[#78877d] max-[540px]:text-[9px]">
+                                {date}
+                            </small>
                         </span>
                     </Link>
 
-                    <div className="auth-actions">
+                    <div className="flex items-center gap-5 max-[540px]:gap-2.5">
                         {authContent}
                     </div>
                 </div>
 
                 <nav
-                    className="category-nav"
                     aria-label="পণ্যের বিভাগ"
+                    className="flex items-center gap-2.5 overflow-x-auto pt-1.5 pb-2.5 [scrollbar-width:thin] max-[540px]:gap-[3px]"
                 >
                     {categories.map(function (category) {
                         const categoryPath = `/category/${category.slug}`;
@@ -189,12 +205,11 @@ export default function Navbar({
                             <Link
                                 key={category.slug}
                                 href={categoryPath}
-                                className={
-                                    isActive
-                                        ? "category-link active"
-                                        : "category-link"
-                                }
                                 aria-current={isActive ? "page" : undefined}
+                                className={`inline-flex shrink-0 items-center gap-[7px] rounded-md px-[15px] py-1.5 text-[13px] whitespace-nowrap hover:bg-[#eaf4ed] max-[900px]:px-2.5 max-[540px]:py-[5px] ${isActive
+                                        ? "bg-[#e1f0e6] font-semibold text-[#008d3d]"
+                                        : ""
+                                    }`}
                             >
                                 <span>{category.icon}</span>
                                 {category.nameBn}

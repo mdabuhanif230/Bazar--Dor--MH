@@ -38,14 +38,16 @@ async function Header({ date }) {
             <Navbar categories={categories} date={date} />
 
             {failed && (
-                <p role="alert" className="ticker-fallback">
+                <p
+                    role="alert"
+                    className="h-[33px] p-1.5 text-center text-[11px]"
+                >
                     বিভাগের তথ্য পাওয়া যাচ্ছে না। আবার পেজ রিফ্রেশ করুন।
                 </p>
             )}
         </>
     );
 }
-
 
 async function Ticker() {
     let products = [];
@@ -59,7 +61,10 @@ async function Ticker() {
 
     if (failed) {
         return (
-            <div role="alert" className="ticker-fallback">
+            <div
+                role="alert"
+                className="h-[33px] p-1.5 text-center text-[11px]"
+            >
                 বাজারদর পাওয়া যাচ্ছে না। আবার পেজ রিফ্রেশ করুন।
             </div>
         );
@@ -75,7 +80,7 @@ export default function RootLayout({ children }) {
     }).format(new Date());
 
     return (
-        <html lang="bn" data-theme="bazardor">
+        <html lang="bn" className="light" data-theme="light">
             <body>
                 <Providers>
                     <Suspense
@@ -87,16 +92,16 @@ export default function RootLayout({ children }) {
                     <Suspense
                         fallback={
                             <div
-                                className="ticker-fallback skeleton"
                                 role="status"
                                 aria-label="দামের তালিকা লোড হচ্ছে"
+                                className="h-[33px] bg-[#dfe9e2] motion-safe:animate-pulse"
                             />
                         }
                     >
                         <Ticker />
                     </Suspense>
 
-                    <main className="site-container main-content">
+                    <main className="mx-auto min-h-[calc(100svh-224px)] w-[calc(100%-48px)] max-w-[1120px] pt-[30px] pb-[72px] max-[767px]:w-[calc(100%-32px)] max-[540px]:pt-5 max-[540px]:pb-[42px]">
                         {children}
                     </main>
 

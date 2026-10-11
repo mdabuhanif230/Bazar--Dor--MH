@@ -17,19 +17,22 @@ export default function PriceRisers({ products }) {
 
     if (items.length === 0) {
         emptyMessage = (
-            <p className="muted">
+            <p className="text-[#78877d]">
                 আজ কোনো পণ্যের দাম বাড়েনি।
             </p>
         );
     }
 
     return (
-        <section className="product-section">
-            <h2>
-                <span className="red-text">▲</span> আজ দাম বেড়েছে
+        <section className="mt-[30px]">
+            <h2 className="mb-[14px] text-[17px] font-semibold">
+                <span className="mr-[5px] text-[13px] text-[#e6504a]">
+                    ▲
+                </span>{" "}
+                আজ দাম বেড়েছে
             </h2>
 
-            <div className="product-grid">
+            <div className="grid grid-cols-3 gap-4 max-[900px]:gap-3 max-[767px]:grid-cols-2 max-[540px]:grid-cols-1">
                 {productCards}
             </div>
 

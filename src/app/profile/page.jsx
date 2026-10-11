@@ -10,9 +10,5 @@ export const metadata = {
 export default async function ProfilePage() {
     const session = await requireSession("/profile");
 
-    return (
-        <ProfileCard
-            initialUser={session.user}
-        />
-    );
+    return <ProfileCard initialUser={session.user} />;
 }

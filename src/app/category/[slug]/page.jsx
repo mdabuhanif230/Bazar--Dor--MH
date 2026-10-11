@@ -26,15 +26,19 @@ export default async function CategoryPage({ params }) {
 
     return (
         <>
-            <section className="panel category-heading">
-                <span className="details-emoji">
+            <section className="mb-[18px] flex items-center gap-[13px] rounded-xl border border-[#e7eee9] bg-[#ffffffba] p-5">
+                <span className="grid h-[55px] w-[55px] shrink-0 place-items-center rounded-full bg-[#eef4ef] text-[32px]">
                     {category.icon}
                 </span>
 
                 <div>
-                    <h1>{category.nameBn}</h1>
+                    <h1 className="text-[26px] font-semibold">
+                        {category.nameBn}
+                    </h1>
 
-                    <p>এই বিভাগের সব পণ্যের আজকের বাজারদর।</p>
+                    <p className="text-xs text-[#78877d]">
+                        এই বিভাগের সব পণ্যের আজকের বাজারদর।
+                    </p>
                 </div>
             </section>
 

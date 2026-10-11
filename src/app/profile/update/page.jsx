@@ -10,9 +10,5 @@ export const metadata = {
 export default async function UpdatePage() {
     const session = await requireSession("/profile/update");
 
-    return (
-        <UpdateProfileForm
-            initialName={session.user.name}
-        />
-    );
+    return <UpdateProfileForm initialName={session.user.name} />;
 }

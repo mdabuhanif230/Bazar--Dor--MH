@@ -2,7 +2,6 @@
 
 import { Suspense } from "react";
 import { Toaster } from "react-hot-toast";
-
 import AuthFeedback from "@/components/shared/AuthFeedback";
 
 export default function Providers({ children }) {

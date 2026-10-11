@@ -10,24 +10,25 @@ export function toNumber(value) {
   }
 
   const text = String(value ?? "");
-  let normalized = "";
+  let result = "";
 
   for (const character of text) {
-    const digitIndex = bengaliDigits.indexOf(character);
+    const digit = bengaliDigits.indexOf(character);
 
-    if (digitIndex !== -1) {
-      normalized += digitIndex;
+    if (digit !== -1) {
+      result += digit;
+    } else if (character >= "0" && character <= "9") {
+      result += character;
     } else if (
-      (character >= "0" && character <= "9") ||
       character === "." ||
       character === "+" ||
       character === "-"
     ) {
-      normalized += character;
+      result += character;
     }
   }
 
-  const number = Number(normalized);
+  const number = Number(result);
 
   if (Number.isFinite(number)) {
     return number;
@@ -37,9 +38,7 @@ export function toNumber(value) {
 }
 
 export function formatNumber(value, decimals = 0) {
-  const number = toNumber(value);
-
-  return number.toLocaleString("bn-BD", {
+  return toNumber(value).toLocaleString("bn-BD", {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
   });
@@ -91,14 +90,11 @@ export function changeInfo(product) {
     symbol = "▼";
   }
 
-  const percentage = formatNumber(Math.abs(amount), 1);
-  const text = symbol + " " + percentage + "%";
-
   return {
-    dir,
-    amount,
-    symbol,
-    text,
+    dir: dir,
+    amount: amount,
+    symbol: symbol,
+    text: symbol + " " + formatNumber(Math.abs(amount), 1) + "%",
   };
 }
 
@@ -112,26 +108,23 @@ export function marketSummary(markets = []) {
   let total = 0;
 
   for (const market of markets) {
-    const minimumPrice = toNumber(market.min);
-    const maximumPrice = toNumber(market.max);
+    const minimum = toNumber(market.min);
+    const maximum = toNumber(market.max);
 
-    if (minimumPrice < min) {
-      min = minimumPrice;
+    if (minimum < min) {
+      min = minimum;
     }
 
-    if (maximumPrice > max) {
-      max = maximumPrice;
+    if (maximum > max) {
+      max = maximum;
     }
 
-    const middlePrice = (minimumPrice + maximumPrice) / 2;
-    total += middlePrice;
+    total += (minimum + maximum) / 2;
   }
 
-  const average = total / markets.length;
-
   return {
-    min,
-    max,
-    average,
+    min: min,
+    max: max,
+    average: total / markets.length,
   };
 }
